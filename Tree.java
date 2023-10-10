@@ -5,24 +5,24 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Index {
+public class Tree {
     static File rootFile = new File("./objects/");
-    static File indexFile = new File("./objects/index.txt/");
+    static File treeFile = new File("./objects/tree.txt/");
 
     public static void Initalize() throws IOException {
         if (!rootFile.exists()) {
             rootFile.mkdir();
         }
-        if (!indexFile.exists()) {
-            indexFile.createNewFile();
+        if (!treeFile.exists()) {
+            treeFile.createNewFile();
         }
     }
 
     public static void AddFile(String filePath) throws IOException {
         File file = new File(filePath);
-        BufferedReader reader = new BufferedReader(new FileReader(indexFile));
-        BufferedWriter writer = new BufferedWriter(new FileWriter(indexFile, true));
-        Blob.Create(indexFile, rootFile.getAbsolutePath());
+        BufferedReader reader = new BufferedReader(new FileReader(treeFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(treeFile, true));
+        Blob.Create(treeFile, rootFile.getAbsolutePath());
         if (!reader.ready()) {
             writer.write(getEntryName(file));
         } else {
@@ -34,23 +34,23 @@ public class Index {
 
     public static void RemoveFile(String filePath) throws IOException {
         File file = new File(filePath);
-        BufferedReader reader = new BufferedReader(new FileReader(indexFile));
-        String newIndex = "";
+        BufferedReader reader = new BufferedReader(new FileReader(treeFile));
+        String newTree = "";
         String fileEntry = getEntryName(file);
         boolean first = true;
         while (reader.ready()) {
             String entry = reader.readLine();
             if (!entry.equals(fileEntry)) {
                 if (!first) {
-                    newIndex += "\n";
+                    newTree += "\n";
                 }
-                newIndex += entry;
+                newTree += entry;
                 first = false;
             }
         }
         reader.close();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(indexFile));
-        writer.write(newIndex);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(treeFile));
+        writer.write(newTree);
         writer.close();
     }
 
