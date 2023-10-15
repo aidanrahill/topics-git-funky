@@ -18,11 +18,10 @@ public class Tree {
         }
     }
 
-    public static void AddFile(String filePath) throws IOException {
+    public static String AddFile(File treeFile, String filePath) throws IOException {
         File file = new File(filePath);
         BufferedReader reader = new BufferedReader(new FileReader(treeFile));
         BufferedWriter writer = new BufferedWriter(new FileWriter(treeFile, true));
-        Blob.Create(treeFile, rootFile.getAbsolutePath());
         if (!reader.ready()) {
             writer.write(getEntryName(file));
         } else {
@@ -30,9 +29,10 @@ public class Tree {
         }
         writer.close();
         reader.close();
+        new Blob(treeFile);
+        return Blob.Analyze(treeFile);
     }
-
-    public static void RemoveFile(String filePath) throws IOException {
+    public static String RemoveFile(String filePath) throws IOException {
         File file = new File(filePath);
         BufferedReader reader = new BufferedReader(new FileReader(treeFile));
         String newTree = "";
@@ -52,8 +52,9 @@ public class Tree {
         BufferedWriter writer = new BufferedWriter(new FileWriter(treeFile));
         writer.write(newTree);
         writer.close();
+        new Blob(treeFile);
+        return Blob.Analyze(treeFile);
     }
-
     static String getEntryName(File file) throws IOException {
         return file.toString() + " : " + Blob.Analyze(file);
     }
