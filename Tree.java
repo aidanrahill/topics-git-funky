@@ -6,19 +6,39 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Tree {
-    static File rootFile = new File("./objects/");
-    static File treeFile = new File("./objects/tree.txt/");
+    File treeDirectory;
+    public File treeFile;
 
-    public static void Initalize() throws IOException {
-        if (!rootFile.exists()) {
-            rootFile.mkdir();
-        }
+    public Tree(File treeDirectory) throws IOException{
+        this.treeDirectory = treeDirectory;
         if (!treeFile.exists()) {
-            treeFile.createNewFile();
+            treeFile.mkdir();
         }
+        if(!treeFile.isDirectory()){
+            throw new IOException("wrong tree file type");
+        }
+        treeFile = new File("./objects/" + treeDirectory.toString());
+        BufferedWriter writer = new BufferedWriter(new FileWriter(treeFile));
+        boolean first = true;
+        for (File file : treeFile.listFiles()) {
+            if(!first){
+                writer.write("\n");
+            }
+            if(treeFile.isDirectory()){
+                Tree tree = new Tree(file);
+                file = tree.treeFile;
+            }
+            else{
+                new Blob(file);
+            }
+            writer.write(getEntryName(file));
+            first = false;
+        } 
+        writer.close();
+        new Blob(treeFile);
     }
 
-    public static String AddFile(File treeFile, String filePath) throws IOException {
+    public void add(String filePath) throws IOException {
         File file = new File(filePath);
         BufferedReader reader = new BufferedReader(new FileReader(treeFile));
         BufferedWriter writer = new BufferedWriter(new FileWriter(treeFile, true));
@@ -30,9 +50,9 @@ public class Tree {
         writer.close();
         reader.close();
         new Blob(treeFile);
-        return Blob.Analyze(treeFile);
     }
-    public static String RemoveFile(String filePath) throws IOException {
+
+    public void remove(String filePath) throws IOException {
         File file = new File(filePath);
         BufferedReader reader = new BufferedReader(new FileReader(treeFile));
         String newTree = "";
@@ -53,9 +73,16 @@ public class Tree {
         writer.write(newTree);
         writer.close();
         new Blob(treeFile);
-        return Blob.Analyze(treeFile);
     }
-    static String getEntryName(File file) throws IOException {
-        return file.toString() + " : " + Blob.Analyze(file);
+    
+    private String getEntryName(File file) throws IOException {
+        String fileType;
+        if(file.isDirectory()){
+            fileType = "tree";
+        }
+        else{
+            fileType = "blob";
+        }
+        return fileType +  " : " + Blob.Analyze(file) + " : " + file.toString();
     }
 }

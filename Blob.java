@@ -1,8 +1,4 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class Blob {
@@ -14,24 +10,12 @@ public class Blob {
         String sha1FileContents = Analyze(file);
         File blobFile = new File("./objects/" + sha1FileContents);
         blobFile.createNewFile();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(blobFile));
-        BufferedReader reader = new BufferedReader(new FileReader(blobFile));
-        String fileContents = "";
-        while (reader.ready()) {
-            fileContents += (char) reader.read();
-        }
-        writer.write(fileContents);
-        writer.close();
-        reader.close();
+        String fileContents = ReadWrite.read(file);
+        ReadWrite.write(blobFile, fileContents);
     }
 
     public static String Analyze(File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        String fileContents = "";
-        while (reader.ready()) {
-            fileContents += (char) reader.read();
-        }
-        reader.close();
+        String fileContents = ReadWrite.read(file);
         return Sha1.toSHA1(fileContents);
     }
 }
