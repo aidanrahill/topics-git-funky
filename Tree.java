@@ -9,35 +9,47 @@ public class Tree {
     File treeDirectory;
     public File treeFile;
 
-    public Tree(File treeDirectory) throws IOException{
-        this.treeDirectory = treeDirectory;
-        if (!treeFile.exists()) {
-            treeFile.mkdir();
+    public Tree(String directoryPath) throws IOException{
+        this.treeDirectory = new File(directoryPath);
+        if (!treeDirectory.exists()) {
+            treeDirectory.mkdir();
         }
-        if(!treeFile.isDirectory()){
-            throw new IOException("wrong tree file type");
+        if(!treeDirectory.isDirectory()){
+            throw new IOException("wrong file type");
         }
-        treeFile = new File("./objects/" + treeDirectory.toString());
-        BufferedWriter writer = new BufferedWriter(new FileWriter(treeFile));
+        // treeFile = new File("./trees/" + treeDirectory.toString());
+        // treeFile.createNewFile();
+        // BufferedWriter writer = new BufferedWriter(new FileWriter(treeFile));
+        String str = "";
         boolean first = true;
-        for (File file : treeFile.listFiles()) {
+        for (File file : treeDirectory.listFiles()) {
             if(!first){
-                writer.write("\n");
+                // writer.write("\n");
+                str += "\n";
             }
-            if(treeFile.isDirectory()){
-                Tree tree = new Tree(file);
+            if(file.isDirectory()){
+                Tree tree = new Tree(file.getPath());
                 file = tree.treeFile;
             }
             else{
                 new Blob(file);
             }
-            writer.write(getEntryName(file));
+            // writer.write(getEntryName(file));
+            str += getEntryName(file);
             first = false;
         } 
+        File tf = new File ("./trees/", directoryPath + "tree");
+        tf.createNewFile();
+        FileWriter writer = new FileWriter(tf);
+        writer.write(str);
         writer.close();
+        this.treeFile = tf;
         new Blob(treeFile);
     }
-
+    public void  addDirectory(String directoryPath) throws IOException{
+        Tree tree = new Tree(directoryPath);
+        add("./trees/" + directoryPath.toString());
+    }
     public void add(String filePath) throws IOException {
         File file = new File(filePath);
         BufferedReader reader = new BufferedReader(new FileReader(treeFile));
