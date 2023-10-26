@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Tree {
     File treeDirectory;
-    public File treeFile;
+    public  File treeFile;
     public File trees = new File("trees");
     public Tree(String directoryPath) throws IOException{
         this.treeDirectory = new File(directoryPath);
@@ -49,7 +49,7 @@ public class Tree {
         this.treeFile = tf;
         new Blob(treeFile);
     }
-    public void  addDirectory(String directoryPath) throws IOException{
+    public void addDirectory(String directoryPath) throws IOException{
         Tree tree = new Tree(directoryPath);
         add(trees + directoryPath.toString());
     }

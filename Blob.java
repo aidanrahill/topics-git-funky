@@ -13,6 +13,9 @@ public class Blob {
         String fileContents = ReadWrite.read(file);
         ReadWrite.write(blobFile, fileContents);
     }
+        public Blob(String string) throws IOException {
+            new Blob(new File(string));
+        }
 
     public static String Analyze(File file) throws IOException {
         String fileContents = ReadWrite.read(file);
