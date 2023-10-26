@@ -8,9 +8,12 @@ import java.io.IOException;
 public class Tree {
     File treeDirectory;
     public File treeFile;
-
+    public File trees = new File("trees");
     public Tree(String directoryPath) throws IOException{
         this.treeDirectory = new File(directoryPath);
+        if(!trees.exists()){
+            trees.mkdir();
+        }
         if (!treeDirectory.exists()) {
             treeDirectory.mkdir();
         }
@@ -38,7 +41,7 @@ public class Tree {
             str += getEntryName(file);
             first = false;
         } 
-        File tf = new File ("./trees/", directoryPath + "tree");
+        File tf = new File ("trees/" + Sha1.toSHA1(str));
         tf.createNewFile();
         FileWriter writer = new FileWriter(tf);
         writer.write(str);
@@ -48,7 +51,7 @@ public class Tree {
     }
     public void  addDirectory(String directoryPath) throws IOException{
         Tree tree = new Tree(directoryPath);
-        add("./trees/" + directoryPath.toString());
+        add(trees + directoryPath.toString());
     }
     public void add(String filePath) throws IOException {
         File file = new File(filePath);

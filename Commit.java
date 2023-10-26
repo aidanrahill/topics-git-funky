@@ -48,7 +48,7 @@ public class Commit {
         if(nextCommitSha == null){
             nextCommitSha = "";
         }
-        String treeSHA = ReadWrite.read(headFile);;
+        String treeSHA = ReadWrite.read(headFile);
         ReadWrite.write(commitFile, 
         treeSHA + "\n" + 
         previousCommitSha + "\n" + 
